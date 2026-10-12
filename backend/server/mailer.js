@@ -1,10 +1,15 @@
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 const SHOP = "Chuu Chuu Craft";
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const peso = n => "₱" + Number(n).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const base64Lines = value => (Buffer.from(value, "utf8").toString("base64").match(/.{1,76}/g) || []).join("\r\n");
 
 let transport = null;
+let googleToken = null;
+let googleTokenExpiresAt = 0;
+
 function getTransport() {
   if (transport || !process.env.SMTP_HOST) return transport;
   const port = Number(process.env.SMTP_PORT || 587);
@@ -16,8 +21,92 @@ function getTransport() {
   return transport;
 }
 
+async function getGoogleAccessToken() {
+  if (googleToken && Date.now() < googleTokenExpiresAt - 60_000) return googleToken;
+  const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN } = process.env;
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_REFRESH_TOKEN) {
+    const error = new Error("Gmail API email requires GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REFRESH_TOKEN.");
+    error.code = "GMAIL_API_NOT_CONFIGURED";
+    throw error;
+  }
+
+  const response = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      refresh_token: GOOGLE_REFRESH_TOKEN,
+      grant_type: "refresh_token"
+    })
+  });
+  const result = await response.json();
+  if (!response.ok || !result.access_token) {
+    const error = new Error(`Google OAuth token request failed${result.error_description ? `: ${result.error_description}` : ` (HTTP ${response.status})`}`);
+    error.code = "GMAIL_TOKEN_REQUEST_FAILED";
+    throw error;
+  }
+
+  googleToken = result.access_token;
+  googleTokenExpiresAt = Date.now() + Number(result.expires_in || 3600) * 1000;
+  return googleToken;
+}
+
+async function sendViaGmailApi({ to, subject, html, text }) {
+  const from = process.env.MAIL_FROM;
+  if (!from || /[\r\n]/.test(from)) {
+    const error = new Error("MAIL_FROM must be set to the Gmail address authorized for Gmail API sending.");
+    error.code = "MAIL_FROM_NOT_CONFIGURED";
+    throw error;
+  }
+
+  const boundary = `chuu_${crypto.randomBytes(12).toString("hex")}`;
+  const encodedSubject = /[^\x00-\x7F]/.test(subject)
+    ? `=?UTF-8?B?${Buffer.from(subject).toString("base64")}?=`
+    : subject;
+  const mime = [
+    `From: ${from}`,
+    `To: ${to}`,
+    `Subject: ${encodedSubject}`,
+    "MIME-Version: 1.0",
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    "",
+    `--${boundary}`,
+    "Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64",
+    "",
+    base64Lines(text),
+    `--${boundary}`,
+    "Content-Type: text/html; charset=UTF-8",
+    "Content-Transfer-Encoding: base64",
+    "",
+    base64Lines(html),
+    `--${boundary}--`
+  ].join("\r\n");
+
+  const response = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${await getGoogleAccessToken()}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ raw: Buffer.from(mime).toString("base64url") })
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    const error = new Error(`Gmail API send failed${result.error?.message ? `: ${result.error.message}` : ` (HTTP ${response.status})`}`);
+    error.code = "GMAIL_SEND_FAILED";
+    throw error;
+  }
+  return result;
+}
+
 // With no SMTP_HOST set, emails are printed to the server console instead (handy while developing).
 async function sendMail({ to, subject, html, text }) {
+  if (process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_REFRESH_TOKEN) {
+    return sendViaGmailApi({ to, subject, html, text });
+  }
+
   if (process.env.RESEND_API_KEY) {
     if (!process.env.MAIL_FROM) {
       const error = new Error("MAIL_FROM must be set to a verified sender address when using Resend.");
@@ -44,7 +133,7 @@ async function sendMail({ to, subject, html, text }) {
   const t = getTransport();
   if (!t) {
     if (process.env.NODE_ENV === "production") {
-      const error = new Error("Email delivery is not configured. Set RESEND_API_KEY and MAIL_FROM, or configure SMTP.");
+      const error = new Error("Email delivery is not configured. Set Gmail API OAuth variables and MAIL_FROM, RESEND_API_KEY and MAIL_FROM, or configure SMTP.");
       error.code = "SMTP_NOT_CONFIGURED";
       throw error;
     }

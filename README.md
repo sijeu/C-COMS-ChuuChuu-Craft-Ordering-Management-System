@@ -10,7 +10,9 @@ Plain HTML/CSS/JS frontend (`frontend/`) + Express/MongoDB backend (`backend/`).
 
 Leave `SMTP_HOST` empty while developing and the OTP codes / receipts are printed in the server console instead of emailed.
 For Gmail use an App Password (Google Account → Security → 2-Step Verification → App passwords).
-For a deployed service, set `NODE_ENV=production` and configure `RESEND_API_KEY` and `MAIL_FROM` (a sender address verified with Resend). The mailer uses Resend's HTTPS API when `RESEND_API_KEY` is set, avoiding SMTP connectivity restrictions on hosts such as Render. Otherwise it can use `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `MAIL_FROM`. Production sign-up reports a configuration error instead of pretending an OTP was emailed when email delivery is unavailable.
+For a deployed service, set `NODE_ENV=production`. To send from an existing Gmail account without a custom domain, enable the Gmail API in Google Cloud, configure OAuth consent and an OAuth client, then create a refresh token with the `https://www.googleapis.com/auth/gmail.send` scope. Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, and `MAIL_FROM` in Render; `MAIL_FROM` must be the same Gmail address that authorized the OAuth grant. The Gmail API uses HTTPS, avoiding SMTP connectivity restrictions on hosts such as Render. OAuth apps left in Google's External / Testing mode have refresh tokens that expire after seven days, so follow Google's publishing and verification requirements for ongoing use.
+
+Alternatively, set `RESEND_API_KEY` and a Resend-verified `MAIL_FROM`, or use `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `MAIL_FROM`. Gmail API takes priority when its OAuth variables are configured, followed by Resend, then SMTP. Production sign-up reports a configuration error instead of pretending an OTP was emailed when email delivery is unavailable.
 
 ## What it does
 - Browsing is open to everyone; **adding to the cart / ordering requires an account**.

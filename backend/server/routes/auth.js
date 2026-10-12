@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
   try { await sendOtp(email, name, code); }
   catch (e) {
     console.error("OTP email failed:", e.message);
-    if (e.code === "SMTP_NOT_CONFIGURED")
+    if (["SMTP_NOT_CONFIGURED", "GMAIL_API_NOT_CONFIGURED", "MAIL_FROM_NOT_CONFIGURED"].includes(e.code))
       return res.status(503).json({ error: "Account verification email is not configured yet. Please contact the shop owner." });
     return res.status(502).json({ error: "We couldn't send the code. Check the email address and try again." });
   }
@@ -75,7 +75,7 @@ router.post("/resend", async (req, res) => {
   try { await sendOtp(email, pending.name, code); }
   catch (e) {
     console.error("OTP email failed:", e.message);
-    if (e.code === "SMTP_NOT_CONFIGURED")
+    if (["SMTP_NOT_CONFIGURED", "GMAIL_API_NOT_CONFIGURED", "MAIL_FROM_NOT_CONFIGURED"].includes(e.code))
       return res.status(503).json({ error: "Account verification email is not configured yet. Please contact the shop owner." });
     return res.status(502).json({ error: "We couldn't send the code. Try again in a moment." });
   }
