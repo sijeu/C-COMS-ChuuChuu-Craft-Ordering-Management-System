@@ -1,0 +1,26 @@
+.order-list { display: flex; flex-direction: column; gap: 16px; }
+.order-card { background: var(--paper); border-radius: var(--radius-md); padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+.oc-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.oc-head .oid { font-size: 1.15rem; }
+.oc-head .oc-total { margin-left: auto; font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; }
+.oc-items { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.oc-item { display: flex; align-items: center; gap: 10px; font-size: .9rem; font-weight: 600; }
+.oc-item svg { width: 38px; height: 38px; flex: none; }
+.oc-item span { color: var(--slate); font-weight: 500; }
+.oc-contact { display: grid; gap: 4px; font-size: .85rem; color: var(--slate); overflow-wrap: anywhere; }
+.oc-contact strong { color: var(--ink); }
+.oc-note { font-size: .85rem; color: var(--slate); }
+.order-card .step { background: var(--white); cursor: default; }
+.order-card .step.done { background: var(--sky); }
+.order-card .step.now { background: var(--coral); }
+.empty p { margin-bottom: 14px; }
+.req-form { display: flex; flex-direction: column; gap: 16px; }
+.req-form label { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: .85rem; color: var(--slate); }
+.req-form textarea, .req-form input { font: inherit; font-weight: 500; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: #fffdf2; color: var(--ink); width: 100%; resize: vertical; }
+.req-form textarea:focus, .req-form input:focus { outline: none; border-color: var(--coral); box-shadow: 0 0 0 3px rgba(238,152,135,.3); }
+.req-form .btn { align-self: flex-start; }
+.form-ok { background: #e4eee4; color: var(--ink); font-weight: 700; font-size: .88rem; padding: 10px 14px; border-radius: var(--radius-sm); }
+.form-ok[hidden] { display: none; }
+@media (max-width: 520px) { .oc-head .oc-total { margin-left: 0; } .steps { flex-wrap: wrap; } .step { flex: 1 1 40%; } }
+.receipt-btn { margin-left: 0; }
+.payment-pending { color: var(--coral-deep); font-size: .82rem; font-weight: 700; }

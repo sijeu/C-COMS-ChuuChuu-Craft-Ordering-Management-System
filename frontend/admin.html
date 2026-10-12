@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chuu Chuu Craft — Workshop Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="Untitled111_20260928111633.png">
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="catalog.css">
+</head>
+<body>
+
+<aside class="side" id="side">
+  <a class="brand" href="index.html">
+    <img class="brand-mark" src="Untitled111_20260928111633.png" alt="Chuu Chuu Craft logo">
+    <span>Chuu Chuu Craft</span>
+  </a>
+  <nav class="side-nav" aria-label="Admin">
+    <a href="#overview" class="active"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>Overview</a>
+    <a href="#sales"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sales Report</a>
+    <a href="#orders"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Orders</a>
+    <a href="#payments"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>Payments</a>
+    <a href="#requests"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>Custom Requests</a>
+  </nav>
+  <a class="side-shop" href="index.html">← Back to the shop</a>
+</aside>
+
+<div class="main">
+  <header class="top">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Toggle menu"><svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+    <div class="top-title">
+      <h1>Workshop desk</h1>
+      <p id="todayLabel"></p>
+    </div>
+    <div class="top-actions">
+      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="search" id="globalSearch" placeholder="Find an order or customer" aria-label="Search orders"></label>
+      <button class="btn btn-outline btn-small" id="exportBtn">Export CSV</button>
+      <button class="btn btn-primary btn-small logout-btn" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <div class="demo-note" id="demoNote" hidden></div>
+
+  <section id="overview" class="kpis">
+    <article class="kpi k-coral"><span class="kpi-label">Revenue this week</span><strong id="kRevenue">₱0.00</strong><small id="kRevenueSub"></small></article>
+    <article class="kpi k-sky"><span class="kpi-label">Open orders</span><strong id="kOpen">0</strong><small id="kOpenSub"></small></article>
+    <article class="kpi k-yellow"><span class="kpi-label">Pieces in the queue</span><strong id="kPieces">0</strong><small>across every open order</small></article>
+    <article class="kpi k-slate"><span class="kpi-label">Average order</span><strong id="kAvg">₱0.00</strong><small>across all orders</small></article>
+  </section>
+
+  <section class="grid-2">
+    <article class="panel">
+      <div class="panel-head"><h2>Revenue, last 7 days</h2><span class="panel-meta" id="chartTotal"></span></div>
+      <div class="chart" id="chart" role="img" aria-label="Bar chart of revenue per day"></div>
+    </article>
+    <article class="panel">
+      <div class="panel-head"><h2>What's on the bench</h2></div>
+      <div class="mix" id="mix"></div>
+    </article>
+  </section>
+
+  <section class="panel" id="sales">
+    <div class="panel-head"><h2>Sales report</h2><div class="filters" id="rangeFilters"></div></div>
+    <div class="report-kpis" id="reportKpis"></div>
+    <div class="report-chart" id="reportChart" role="img" aria-label="Revenue over time"></div>
+    <div class="report-cols">
+      <div>
+        <h3 class="report-sub">Best sellers</h3>
+        <div class="table-wrap"><table class="report-table"><thead><tr><th>Item</th><th>Sold</th><th>Revenue</th></tr></thead><tbody id="topRows"></tbody></table></div>
+      </div>
+      <div>
+        <h3 class="report-sub">Sales by category</h3>
+        <div class="mix" id="catMix"></div>
+      </div>
+    </div>
+    <div class="report-foot"><button class="btn btn-outline btn-small" id="reportExport">Export report CSV</button></div>
+  </section>
+
+  <section class="panel" id="orders">
+    <div class="panel-head">
+      <h2>Orders</h2>
+      <div class="filters" id="statusFilters"></div>
+      <button class="btn btn-primary btn-small" id="newOrderBtn">Create order</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Order</th><th>Customer</th><th>Pieces</th><th>Total</th><th>Placed</th><th>Status</th></tr></thead>
+        <tbody id="orderRows"></tbody>
+      </table>
+    </div>
+    <p class="empty" id="ordersEmpty" hidden>No orders match.</p>
+  </section>
+
+  <section class="panel" id="payments">
+    <div class="panel-head"><h2>Payment methods</h2><span class="panel-meta">Customers see configured methods during checkout</span></div>
+    <form id="paymentSettingsForm" class="payment-settings">
+      <div id="paymentSettingsFields" class="payment-settings-grid"></div>
+      <p class="settings-message" id="paymentSettingsMessage" role="status" hidden></p>
+      <button class="btn btn-primary" type="submit" id="savePaymentSettings">Save payment details</button>
+    </form>
+  </section>
+
+  <section class="panel" id="requests">
+    <div class="panel-head"><h2>Custom requests</h2><span class="panel-meta" id="reqCount"></span></div>
+    <div id="reqList"></div>
+  </section>
+</div>
+
+<div class="drawer-scrim" id="scrim"></div>
+<aside class="detail" id="detail" aria-hidden="true">
+  <div class="detail-head"><h3 id="dTitle"></h3><button class="icon-btn dark" id="dClose" aria-label="Close"><svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></button></div>
+  <div id="dBody"></div>
+</aside>
+
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="catalog.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

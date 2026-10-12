@@ -1,0 +1,85 @@
+:root {
+  --cream: #ebd396; --cream-deep: #F6D877; --yellow: #dbbc66; --yellow-deep: #EFAE1E;
+  --sky: #8FC0DE; --sky-deep: #6BA0C4; --coral: #EE9887; --coral-deep: #DC7362;
+  --slate: #5A6B80; --slate-light: #9AB2C6; --ink: #3A3226; --white: #FFFFFF; --paper: #f8f4d6; --line: #ecdfae;
+  --radius-lg: 26px; --radius-md: 16px; --radius-sm: 10px;
+  --shadow: 0 14px 30px -18px rgba(58,50,38,.35);
+  --font-display: 'Fraunces', serif; --font-body: 'Karla', sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body); line-height: 1.5; }
+a { color: inherit; text-decoration: none; }
+h1, h2 { font-family: var(--font-display); font-weight: 600; margin: 0; }
+p { margin: 0; }
+em { font-style: italic; color: var(--coral-deep); }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+svg { display: block; max-width: 100%; }
+:focus-visible { outline: 3px solid var(--coral-deep); outline-offset: 2px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 24px; border-radius: 999px; font-weight: 600; font-size: .95rem; transition: transform .15s, background .15s; }
+.btn-primary { background: var(--coral); color: var(--white); box-shadow: var(--shadow); }
+.btn-primary:hover { background: var(--coral-deep); transform: translateY(-1px); }
+.btn-outline { background: var(--white); color: var(--sky-deep); border: 1.5px solid var(--sky); }
+.btn-outline:hover { border-color: var(--sky-deep); }
+.btn-small { padding: 9px 18px; font-size: .85rem; }
+.btn-full { width: 100%; }
+
+.login { min-height: 100vh; display: grid; grid-template-columns: 1.05fr .95fr; }
+.awning { background: repeating-linear-gradient(90deg, var(--yellow) 0, var(--yellow) 48px, var(--cream) 48px, var(--cream) 96px); border-right: 6px solid var(--sky); padding: 48px; display: flex; flex-direction: column; justify-content: center; gap: 36px; }
+.awning-card { background: var(--paper); border-radius: var(--radius-lg); padding: 34px 36px; box-shadow: var(--shadow); max-width: 480px; display: flex; flex-direction: column; gap: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--sky-deep); }
+.brand-mark { width: 34px; height: 34px; }
+.awning-card h1 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); line-height: 1.12; }
+.awning-card p { color: var(--slate); max-width: 38ch; }
+.awning-art { display: flex; gap: 16px; }
+.awning-art svg { width: 92px; height: 92px; background: var(--white); border-radius: var(--radius-md); padding: 10px; box-shadow: var(--shadow); }
+.awning-art svg:nth-child(2) { transform: translateY(14px) rotate(3deg); }
+.awning-art svg:nth-child(1) { transform: rotate(-4deg); }
+
+.panel-side { display: flex; align-items: center; justify-content: center; padding: 40px 28px; }
+.auth-card { width: 100%; max-width: 400px; background: var(--white); border-radius: var(--radius-lg); padding: 28px 30px 26px; box-shadow: var(--shadow); }
+.tabs { display: flex; gap: 6px; background: var(--paper); padding: 5px; border-radius: 999px; margin-bottom: 24px; }
+.tab { flex: 1; padding: 10px 6px; border-radius: 999px; font-weight: 700; font-size: .88rem; color: var(--slate); }
+.tab.active { background: var(--sky); color: var(--white); }
+#authForm { display: flex; flex-direction: column; gap: 16px; }
+#authForm h2 { font-size: 1.6rem; }
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: .85rem; color: var(--slate); }
+label[hidden] { display: none; }
+input { font: inherit; font-weight: 500; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: #fffdf2; color: var(--ink); width: 100%; }
+input:focus { outline: none; border-color: var(--coral); box-shadow: 0 0 0 3px rgba(238,152,135,.3); }
+.pw { position: relative; display: block; }
+.pw input { padding-right: 64px; }
+.pw-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: .78rem; font-weight: 700; color: var(--sky-deep); padding: 6px 8px; border-radius: 8px; }
+.pw-toggle:hover { background: var(--paper); }
+.error { background: #fbe4df; color: var(--coral-deep); font-weight: 700; font-size: .85rem; padding: 10px 14px; border-radius: var(--radius-sm); }
+.error[hidden] { display: none; }
+.demo { margin-top: 22px; padding-top: 18px; border-top: 1.5px dashed var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: .85rem; font-weight: 700; color: var(--slate); }
+.demo div { display: flex; gap: 8px; }
+.back { display: inline-block; margin-top: 18px; font-size: .85rem; font-weight: 700; color: var(--sky-deep); }
+.back:hover { text-decoration: underline; }
+
+@media (max-width: 860px) {
+  .login { grid-template-columns: 1fr; }
+  .awning { border-right: none; border-bottom: 6px solid var(--sky); padding: 28px 20px; gap: 22px; }
+  .awning-art { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+img.brand-mark { width: 44px; height: 44px; object-fit: contain; border-radius: 50%; background: var(--white); flex: none; }
+img.brand-mark.small { width: 32px; height: 32px; }
+
+/* ---------- Logo emphasis ---------- */
+.awning-card .brand { flex-direction: column; align-items: flex-start; gap: 14px; font-size: 1.6rem; }
+img.brand-mark { width: 140px; height: 140px; object-fit: cover; border: 5px solid var(--white); box-shadow: 0 16px 30px -12px rgba(58,50,38,.55); background: #e4e4e4; transform: rotate(-4deg); }
+@media (max-width: 860px) { img.brand-mark { width: 96px; height: 96px; } }
+
+/* ---------- OTP step ---------- */
+#authForm[hidden], #otpForm[hidden], .tabs[hidden] { display: none; }
+#otpForm { display: flex; flex-direction: column; gap: 16px; }
+#otpForm h2 { font-size: 1.6rem; }
+.otp-help { color: var(--slate); font-size: .9rem; }
+#otp { font-size: 1.6rem; letter-spacing: .5em; text-align: center; font-weight: 700; }
+.otp-links { display: flex; justify-content: space-between; gap: 10px; }
+.link-btn { font-weight: 700; font-size: .85rem; color: var(--sky-deep); padding: 4px 2px; }
+.link-btn:hover { text-decoration: underline; }
+.link-btn:disabled { color: var(--slate-light); cursor: not-allowed; text-decoration: none; }

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chuu Chuu Craft — Order Handmade Crafts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="Untitled111_20260928111633.png">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="catalog.css">
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <img class="brand-mark" src="Untitled111_20260928111633.png" alt="Chuu Chuu Craft logo">
+      <span>Chuu Chuu Craft</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#shop">Shop</a>
+      <a href="#custom">Custom Orders</a>
+      <a href="#track">Track an Order</a>
+      <a href="#workshop">Workshop Notes</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Search catalog">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="icon-btn cart-btn" id="cartToggle" aria-label="Open order cart">
+        <svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <a class="btn btn-outline btn-small" id="accountLink" href="login.html">Log in</a>
+      <button class="btn btn-primary btn-small" id="startOrderNav">Start an Order</button>
+    </div>
+  </div>
+
+  <div class="search-bar" id="searchBar">
+    <input type="text" id="searchInput" placeholder="Search keychains, clay trinkets, crochet…" aria-label="Search products">
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="pill">Open for Commissions — Winter Batch</span>
+      <h1>Small pieces,<br>made by hand,<br><em>ordered with care.</em></h1>
+      <p class="hero-sub">Beaded keychains, hand-shaped clay trinkets and crochet charms — pick a piece already in the workshop or start a custom order and we'll build the queue around you.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-scroll="#shop">Browse the Shop</button>
+        <button class="btn btn-outline" data-scroll="#custom">Request a Custom Piece</button>
+      </div>
+      <div class="hero-stats">
+        <div><strong>4–6 days</strong><span>average make time</span></div>
+        <div><strong>312</strong><span>orders stitched this year</span></div>
+        <div><strong>4.9★</strong><span>from repeat makers' friends</span></div>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <div class="hero-logo">
+        <img src="Untitled111_20260928111633.png" alt="Chuu Chuu Craft logo">
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY / QUICK ORDER MENU -->
+  <section class="categories" id="shop">
+    <div class="section-head">
+      <h2>What are you ordering today?</h2>
+      <p>Filter the workshop shelf by piece — everything shown is ready to queue.</p>
+    </div>
+    <div class="cat-row" id="categoryRow"></div>
+  </section>
+
+  <!-- CATALOG -->
+  <section class="catalog">
+    <div class="section-head">
+      <h2>Most requested this month</h2>
+      <p>Add straight to your order — quantities and notes are yours to adjust before you submit.</p>
+    </div>
+    <div class="catalog-grid" id="catalogGrid"></div>
+    <p class="empty-state" id="emptyState" hidden>Nothing matches that search — try another word, or <button class="link-btn" id="clearFilters">clear the filters</button>.</p>
+  </section>
+
+  <!-- PROMISE / TRUST -->
+  <section class="promise">
+    <div class="section-head">
+      <h2>How every order is handled</h2>
+      <p>No mystery in the process — here's exactly what happens after you check out.</p>
+    </div>
+    <div class="promise-grid">
+      <div class="promise-card">
+        <svg viewBox="0 0 24 24"><path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/></svg>
+        <h3>Made after you order</h3>
+        <p>Nothing sits pre-made on a shelf. Your piece goes into the queue the moment it's confirmed.</p>
+      </div>
+      <div class="promise-card">
+        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="15" height="11" rx="2"/><path d="M18 10h2.5a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H18"/><circle cx="7.5" cy="18.5" r="1.5"/><circle cx="14.5" cy="18.5" r="1.5"/></svg>
+        <h3>Ships in 3–5 days</h3>
+        <p>You'll get a tracking note the day it leaves the workbench, not before.</p>
+      </div>
+      <div class="promise-card">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.5 8 2.5 4 6.5 4c2 0 3.5 1 5.5 3 2-2 3.5-3 5.5-3 4 0 6 4 4 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+        <h3>Packaged to be reused</h3>
+        <p>Recycled boxes, cloth wraps, no single-use plastic in the parcel.</p>
+      </div>
+      <div class="promise-card">
+        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        <h3>Fix it if it's wrong</h3>
+        <p>Wrong colour, loose clasp, cracked resin — tell us within 14 days and we'll remake it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM ORDER -->
+  <section class="custom" id="custom">
+    <div class="custom-copy">
+      <h2>Have something specific in mind?</h2>
+      <p>Describe the piece, share a reference if you have one, and we'll reply with a price and a place in the queue before anything is made.</p>
+      <ul class="custom-list">
+        <li>Colour matching from a photo</li>
+        <li>Initials, dates or small charms added</li>
+        <li>Matching sets for gifts or events</li>
+      </ul>
+    </div>
+    <form class="custom-form" id="customForm">
+      <label>Your name
+        <input type="text" name="name" required placeholder="Jamie Cruz">
+      </label>
+      <label>What are you picturing?
+        <textarea name="details" rows="3" required placeholder="A moon-and-star keychain in the same colours as the crochet coaster…"></textarea>
+      </label>
+      <label>Needed by (optional)
+        <input type="date" name="needBy">
+      </label>
+      <button type="submit" class="btn btn-primary">Send Request</button>
+      <p class="form-note" id="customNote" hidden></p>
+    </form>
+  </section>
+
+  <!-- TRACK ORDER -->
+  <section class="track" id="track">
+    <div class="track-inner">
+      <div>
+        <h2>Track an order</h2>
+        <p>Enter the order number from your confirmation to see where it sits in the queue.</p>
+      </div>
+      <form id="trackForm" class="track-form">
+        <input type="text" id="trackInput" placeholder="e.g. CC-4821" required>
+        <button type="submit" class="btn btn-outline btn-light">Check Status</button>
+      </form>
+    </div>
+    <p class="track-result" id="trackResult" hidden></p>
+  </section>
+
+  <!-- MAKER'S CIRCLE PROMO -->
+  <section class="promo" id="workshop">
+    <div class="promo-card">
+      <div class="promo-text">
+        <span class="promo-eyebrow">The Maker's Circle</span>
+        <h2>Every 5th order, something small rides along free.</h2>
+        <p>No sign-up form — we track it against your name automatically once you've checked out once.</p>
+      </div>
+      <button class="btn btn-primary" data-scroll="#shop">Start Your First Order</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="brand"><img class="brand-mark small" src="Untitled111_20260928111633.png" alt="Chuu Chuu Craft logo">Chuu Chuu Craft</span>
+      <p>Handmade keychains, clay trinkets and crochet, queued and stitched to order.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="#shop">Keychains</a>
+      <a href="#shop">Clay Trinkets</a>
+      <a href="#shop">Crochet</a>
+      <a href="#custom">Custom Pieces</a>
+    </div>
+    <div>
+      <h4>Help</h4>
+      <a href="#track">Track an Order</a>
+      <a href="#custom">Custom Requests</a>
+      <a href="#">Shipping &amp; Care</a>
+    </div>
+    <div>
+      <h4>Stay in the loop</h4>
+      <form class="newsletter" id="newsletterForm">
+        <input type="email" placeholder="you@example.com" required>
+        <button type="submit" class="btn btn-primary btn-small">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Chuu Chuu Craft. Made in small batches.</span>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+  <div class="cart-header">
+    <h3>Your Order</h3>
+    <button class="icon-btn" id="cartClose" aria-label="Close cart">
+      <svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-empty" id="cartEmptyMsg">Nothing queued yet — add a piece from the shop.</div>
+  <form class="cart-footer" id="checkoutForm">
+    <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">$0.00</strong></div>
+    <label class="cart-note">Phone number
+      <input type="tel" id="checkoutPhone" name="phone" required maxlength="25" pattern="(?=(?:\D*\d){7})[+()0-9 .-]{7,25}" autocomplete="tel" placeholder="+63 912 345 6789">
+    </label>
+    <label class="cart-note">Delivery address
+      <textarea id="checkoutAddress" name="deliveryAddress" required minlength="5" maxlength="300" rows="3" autocomplete="street-address" placeholder="House/building, street, barangay, city, province, postal code"></textarea>
+    </label>
+    <label class="cart-note">Payment method
+      <select id="checkoutPayment" name="paymentMethod" required>
+        <option value="">Loading payment methods…</option>
+      </select>
+    </label>
+    <div class="payment-preview" id="paymentPreview" hidden></div>
+    <label class="cart-note">Order note (optional)
+      <input type="text" id="cartNote" placeholder="Ship together, gift wrap, etc.">
+    </label>
+    <button class="btn btn-primary btn-full" id="placeOrderBtn">Place Order</button>
+  </form>
+</aside>
+<div class="drawer-scrim" id="drawerScrim"></div>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-scrim" id="confirmScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <svg class="modal-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+    <h3 id="confirmTitle">Order queued</h3>
+    <p>Your order number is</p>
+    <p class="order-id" id="orderIdDisplay"></p>
+    <p class="modal-sub" id="confirmSub">Save this to track it later.</p>
+    <button class="btn btn-primary btn-full" id="confirmClose">Back to Shop</button>
+  </div>
+</div>
+
+<!-- LOGIN REQUIRED MODAL -->
+<div class="modal-scrim" id="loginScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginPromptTitle">
+    <h3 id="loginPromptTitle">Log in to start your order</h3>
+    <p class="modal-sub" id="loginPromptMsg">Create an account or log in to add pieces to your order.</p>
+    <a class="btn btn-primary btn-full" href="login.html?next=index.html">Log in</a>
+    <a class="btn btn-outline btn-full" href="login.html?mode=signup&amp;next=index.html">Create account</a>
+    <button class="link-btn" id="loginPromptClose" type="button">Not now</button>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="catalog.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

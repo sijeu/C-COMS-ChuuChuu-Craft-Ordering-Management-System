@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — Chuu Chuu Craft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="Untitled111_20260928111633.png">
+<link rel="stylesheet" href="login.css">
+</head>
+<body>
+<main class="login">
+  <section class="awning">
+    <div class="awning-card">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="Untitled111_20260928111633.png" alt="Chuu Chuu Craft logo">
+        <span>Chuu Chuu Craft</span>
+      </a>
+      <h1>Small pieces,<br>made by hand,<br><em>ordered with care.</em></h1>
+      <p>Log in to follow your orders, send a custom request, or run the workshop.</p>
+    </div>
+    <div class="awning-art" aria-hidden="true">
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="#FDEBC8"/><path d="M60 24a10 10 0 0 1 10 10v6h6a10 10 0 1 1 0 20h-6v6a10 10 0 1 1-20 0v-6h-6a10 10 0 1 1 0-20h6v-6a10 10 0 0 1 10-10z" fill="#EE9887"/></svg>
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="#F6DCE0"/><path d="M60 26l10 20 22 3-16 15 4 22-20-11-20 11 4-22-16-15 22-3z" fill="#6BA0C4"/></svg>
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="#E4EEE4"/><circle cx="60" cy="60" r="28" fill="none" stroke="#EE9887" stroke-width="6"/><circle cx="60" cy="60" r="10" fill="#FBCB4B"/></svg>
+    </div>
+  </section>
+
+  <section class="panel-side">
+    <div class="auth-card">
+      <div class="tabs" role="tablist">
+        <button class="tab active" role="tab" id="tabLogin" aria-selected="true">Log in</button>
+        <button class="tab" role="tab" id="tabSignup" aria-selected="false">Create account</button>
+      </div>
+
+      <form id="authForm" novalidate>
+        <h2 id="formTitle">Welcome back</h2>
+        <label id="nameField" hidden>Your name
+          <input type="text" id="name" autocomplete="name" placeholder="Jamie Cruz">
+        </label>
+        <label>Email
+          <input type="email" id="email" autocomplete="email" placeholder="you@example.com" required>
+        </label>
+        <label>Password
+          <span class="pw">
+            <input type="password" id="password" autocomplete="current-password" placeholder="••••••••" required>
+            <button type="button" class="pw-toggle" id="pwToggle" aria-label="Show password">Show</button>
+          </span>
+        </label>
+        <p class="error" id="error" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary btn-full" id="submitBtn">Log in</button>
+      </form>
+
+      <form id="otpForm" novalidate hidden>
+        <h2>Check your email</h2>
+        <p class="otp-help" id="otpHelp"></p>
+        <label>6-digit code
+          <input type="text" id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
+        </label>
+        <p class="error" id="otpError" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary btn-full" id="otpBtn">Verify &amp; create account</button>
+        <div class="otp-links">
+          <button type="button" class="link-btn" id="resendBtn">Resend code</button>
+          <button type="button" class="link-btn" id="otpBack">Use a different email</button>
+        </div>
+      </form>
+      <a class="back" href="index.html">← Back to the shop</a>
+    </div>
+  </section>
+</main>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const next = params.get("next") === "index.html" ? "index.html" : null; // only ever send people back to the shop
+  const dest = user => (user.role === "admin" ? Auth.home("admin") : next || Auth.home(user.role));
+  let mode = "login", pendingEmail = "", timer = null;
+
+  const existing = Auth.current();
+  if (existing) { location.replace(dest(existing)); return; }
+
+  function setMode(m) {
+    mode = m;
+    const login = m === "login";
+    $("tabLogin").classList.toggle("active", login); $("tabLogin").setAttribute("aria-selected", login);
+    $("tabSignup").classList.toggle("active", !login); $("tabSignup").setAttribute("aria-selected", !login);
+    $("nameField").hidden = login;
+    $("formTitle").textContent = login ? "Welcome back" : "Join the workshop";
+    $("submitBtn").textContent = login ? "Log in" : "Create account";
+    $("password").autocomplete = login ? "current-password" : "new-password";
+    $("error").hidden = true;
+  }
+  $("tabLogin").addEventListener("click", () => setMode("login"));
+  $("tabSignup").addEventListener("click", () => setMode("signup"));
+  if (params.get("mode") === "signup") setMode("signup");
+
+  $("pwToggle").addEventListener("click", () => {
+    const show = $("password").type === "password";
+    $("password").type = show ? "text" : "password";
+    $("pwToggle").textContent = show ? "Hide" : "Show";
+    $("pwToggle").setAttribute("aria-label", show ? "Hide password" : "Show password");
+  });
+
+  function fail(msg) { $("error").textContent = msg; $("error").hidden = false; }
+  function otpFail(msg) { $("otpError").textContent = msg; $("otpError").hidden = false; }
+
+  /* ---------- OTP step ---------- */
+  function cooldown(sec) {
+    clearInterval(timer);
+    const btn = $("resendBtn");
+    const tick = () => {
+      btn.disabled = sec > 0;
+      btn.textContent = sec > 0 ? `Resend code (${sec}s)` : "Resend code";
+      if (sec-- <= 0) clearInterval(timer);
+    };
+    tick(); timer = setInterval(tick, 1000);
+  }
+  function showOtp(email) {
+    pendingEmail = email;
+    $("authForm").hidden = true; document.querySelector(".tabs").hidden = true; $("otpForm").hidden = false;
+    $("otpHelp").textContent = `We sent a 6-digit code to ${email}. It expires in 10 minutes.`;
+    $("otp").value = ""; $("otpError").hidden = true; $("otp").focus();
+    cooldown(30);
+  }
+  $("otpBack").addEventListener("click", () => {
+    clearInterval(timer);
+    $("otpForm").hidden = true; $("authForm").hidden = false; document.querySelector(".tabs").hidden = false;
+  });
+  $("resendBtn").addEventListener("click", async () => {
+    $("otpError").hidden = true;
+    const res = await Auth.resend(pendingEmail);
+    if (!res.ok) return otpFail(res.error);
+    $("otpHelp").textContent = `A new code is on its way to ${pendingEmail}.`;
+    cooldown(30);
+  });
+  $("otpForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const code = $("otp").value.trim();
+    if (!/^\d{6}$/.test(code)) return otpFail("Enter the 6-digit code from your email.");
+    $("otpBtn").disabled = true;
+    const res = await Auth.verify(pendingEmail, code);
+    $("otpBtn").disabled = false;
+    if (!res.ok) return otpFail(res.error);
+    location.href = dest(res.user);
+  });
+
+  /* ---------- Log in / sign up ---------- */
+  $("authForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = $("email").value.trim(), pw = $("password").value, name = $("name").value;
+    if (!email || !pw || (mode === "signup" && !name.trim())) return fail("Please fill in every field.");
+    if (!/^\S+@\S+\.\S+$/.test(email)) return fail("That email doesn't look right.");
+    if (mode === "signup" && pw.length < 6) return fail("Use at least 6 characters for your password.");
+    $("submitBtn").disabled = true;
+    const res = mode === "login" ? await Auth.login(email, pw) : await Auth.register(name, email, pw);
+    $("submitBtn").disabled = false;
+    if (!res.ok) return fail(res.error);
+    if (res.pending) return showOtp(res.email);
+    location.href = dest(res.user);
+  });
+})();
+</script>
+</body>
+</html>

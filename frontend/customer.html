@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders — Chuu Chuu Craft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="Untitled111_20260928111633.png">
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="customer.css">
+<link rel="stylesheet" href="catalog.css">
+</head>
+<body>
+
+<aside class="side" id="side">
+  <a class="brand" href="index.html">
+    <img class="brand-mark" src="Untitled111_20260928111633.png" alt="Chuu Chuu Craft logo">
+    <span>Chuu Chuu Craft</span>
+  </a>
+  <nav class="side-nav" aria-label="Account">
+    <a href="#overview" class="active"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>Overview</a>
+    <a href="#orders"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>My Orders</a>
+    <a href="#request"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>Custom Request</a>
+  </nav>
+  <a class="side-shop" href="index.html">← Back to the shop</a>
+</aside>
+
+<div class="main">
+  <header class="top">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Toggle menu"><svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+    <div class="top-title">
+      <h1 id="hello">Hello</h1>
+      <p id="todayLabel"></p>
+    </div>
+    <div class="top-actions">
+      <a class="btn btn-outline btn-small" href="index.html">Browse the shop</a>
+      <button class="btn btn-primary btn-small logout-btn" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <section id="overview" class="kpis">
+    <article class="kpi k-coral"><span class="kpi-label">Orders placed</span><strong id="kOrders">0</strong><small id="kOrdersSub"></small></article>
+    <article class="kpi k-sky"><span class="kpi-label">On the bench</span><strong id="kActive">0</strong><small>orders still being made</small></article>
+    <article class="kpi k-yellow"><span class="kpi-label">Pieces ordered</span><strong id="kPieces">0</strong><small>across all orders</small></article>
+    <article class="kpi k-slate"><span class="kpi-label">Total spent</span><strong id="kSpent">₱0.00</strong><small>before shipping</small></article>
+  </section>
+
+  <section class="panel" id="orders">
+    <div class="panel-head"><h2>My orders</h2><span class="panel-meta" id="orderMeta"></span></div>
+    <div id="orderList" class="order-list"></div>
+    <div class="empty" id="orderEmpty" hidden>
+      <p>You haven't placed an order yet.</p>
+      <a class="btn btn-primary btn-small" href="index.html">Start an order</a>
+    </div>
+  </section>
+
+  <section class="grid-2 lower">
+    <article class="panel" id="request">
+      <div class="panel-head"><h2>Request a custom piece</h2></div>
+      <form class="req-form" id="reqForm">
+        <label>What are you picturing?
+          <textarea id="reqText" rows="4" required placeholder="A moon-and-star keychain in the same colours as the crochet coaster…"></textarea>
+        </label>
+        <label>Needed by (optional)
+          <input type="date" id="reqDate">
+        </label>
+        <button type="submit" class="btn btn-primary">Send request</button>
+        <p class="form-ok" id="reqOk" hidden>Request sent — we'll reply by email with a quote and queue date.</p>
+      </form>
+    </article>
+    <article class="panel">
+      <div class="panel-head"><h2>Your requests</h2><span class="panel-meta" id="reqMeta"></span></div>
+      <div id="reqList"></div>
+    </article>
+  </section>
+</div>
+
+<div class="drawer-scrim" id="scrim"></div>
+
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="catalog.js"></script>
+<script src="customer.js"></script>
+</body>
+</html>
