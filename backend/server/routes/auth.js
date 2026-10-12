@@ -38,7 +38,12 @@ router.post("/register", async (req, res) => {
   pending.passwordHash = await bcrypt.hash(password, 10);
   await issueCode(pending, code);
   try { await sendOtp(email, name, code); }
-  catch (e) { console.error("OTP email failed:", e.message); return res.status(502).json({ error: "We couldn't send the code. Check the email address and try again." }); }
+  catch (e) {
+    console.error("OTP email failed:", e.message);
+    if (e.code === "SMTP_NOT_CONFIGURED")
+      return res.status(503).json({ error: "Account verification email is not configured yet. Please contact the shop owner." });
+    return res.status(502).json({ error: "We couldn't send the code. Check the email address and try again." });
+  }
   res.status(202).json({ pending: true, email });
 });
 
@@ -68,7 +73,12 @@ router.post("/resend", async (req, res) => {
   const code = newCode();
   await issueCode(pending, code);
   try { await sendOtp(email, pending.name, code); }
-  catch (e) { console.error("OTP email failed:", e.message); return res.status(502).json({ error: "We couldn't send the code. Try again in a moment." }); }
+  catch (e) {
+    console.error("OTP email failed:", e.message);
+    if (e.code === "SMTP_NOT_CONFIGURED")
+      return res.status(503).json({ error: "Account verification email is not configured yet. Please contact the shop owner." });
+    return res.status(502).json({ error: "We couldn't send the code. Try again in a moment." });
+  }
   res.json({ ok: true });
 });
 

@@ -10,6 +10,7 @@ Plain HTML/CSS/JS frontend (`frontend/`) + Express/MongoDB backend (`backend/`).
 
 Leave `SMTP_HOST` empty while developing and the OTP codes / receipts are printed in the server console instead of emailed.
 For Gmail use an App Password (Google Account → Security → 2-Step Verification → App passwords).
+For a deployed service, set `NODE_ENV=production` and configure `RESEND_API_KEY` and `MAIL_FROM` (a sender address verified with Resend). The mailer uses Resend's HTTPS API when `RESEND_API_KEY` is set, avoiding SMTP connectivity restrictions on hosts such as Render. Otherwise it can use `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `MAIL_FROM`. Production sign-up reports a configuration error instead of pretending an OTP was emailed when email delivery is unavailable.
 
 ## What it does
 - Browsing is open to everyone; **adding to the cart / ordering requires an account**.

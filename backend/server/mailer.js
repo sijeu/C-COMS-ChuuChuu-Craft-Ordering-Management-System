@@ -18,8 +18,36 @@ function getTransport() {
 
 // With no SMTP_HOST set, emails are printed to the server console instead (handy while developing).
 async function sendMail({ to, subject, html, text }) {
+  if (process.env.RESEND_API_KEY) {
+    if (!process.env.MAIL_FROM) {
+      const error = new Error("MAIL_FROM must be set to a verified sender address when using Resend.");
+      error.code = "MAIL_FROM_NOT_CONFIGURED";
+      throw error;
+    }
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ from: process.env.MAIL_FROM, to: [to], subject, html, text })
+    });
+    if (!response.ok) {
+      const detail = (await response.text()).slice(0, 500);
+      const error = new Error(`Resend email API returned HTTP ${response.status}${detail ? `: ${detail}` : ""}`);
+      error.code = "RESEND_REQUEST_FAILED";
+      throw error;
+    }
+    return response.json();
+  }
+
   const t = getTransport();
   if (!t) {
+    if (process.env.NODE_ENV === "production") {
+      const error = new Error("Email delivery is not configured. Set RESEND_API_KEY and MAIL_FROM, or configure SMTP.");
+      error.code = "SMTP_NOT_CONFIGURED";
+      throw error;
+    }
     console.log(`\n--- email not sent (SMTP_HOST not set) ---\nTo: ${to}\nSubject: ${subject}\n${text}\n------------------------------------------\n`);
     return { dev: true };
   }
