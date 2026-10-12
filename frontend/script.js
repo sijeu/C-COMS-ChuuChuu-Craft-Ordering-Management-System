@@ -93,7 +93,7 @@
       const html = [];
       window.CATEGORIES.forEach(cat => {
         if (activeCategory !== "all" && activeCategory !== cat.id) return;
-        const inCat = PRODUCTS.filter(p => p.cat === cat.id && (p.name + " " + (p.sub || "")).toLowerCase().includes(term));
+        const inCat = PRODUCTS.filter(p => p.price != null && p.cat === cat.id && (p.name + " " + (p.sub || "")).toLowerCase().includes(term));
         if (!inCat.length) return;
         html.push(`<h3 class="group-head">${cat.name}</h3>`);
         inCat.filter(p => !p.sub).forEach(p => html.push(cardHTML(p, cat.name)));
@@ -336,14 +336,6 @@
       } catch (err) { note.textContent = err.message; }
     });
 
-    /* ---------- Newsletter ---------- */
-    document.getElementById("newsletterForm").addEventListener("submit", e => {
-      e.preventDefault();
-      const input = e.target.querySelector("input");
-      input.value = "";
-      input.placeholder = "You're on the list!";
-    });
-  
     /* ---------- Account link ---------- */
     const me = Auth.current();
     if (me) {

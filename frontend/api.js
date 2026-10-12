@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   // Backend URL. Change this when the backend is deployed (or set window.API_BASE before this script).
-  const BASE = window.API_BASE || "http://localhost:3000/api";
+  const BASE = window.API_BASE || "https://c-coms-chuuchuu-craft-ordering.onrender.com/api";
   const token = () => { try { return localStorage.getItem("tt_token"); } catch (e) { return null; } };
 
   async function req(method, path, body) {
